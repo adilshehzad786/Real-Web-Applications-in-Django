@@ -1,0 +1,45 @@
+
+{% extends 'movies/base.html' %}
+
+{% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
+
+<!-- container-fluid -->
+<div id="pricing" class="container-fluid">
+<table class="table table-bordered table-striped text-center">
+   <thead>
+       <tr>
+            {% for movie in movies %}
+
+          <th>Movie Title</th>
+          <th> <a href="/movies/{{movie.id}}">{{movie.title}}</a></th>
+
+       </tr>
+   </thead>
+   <tbody>
+       <tr>
+           <td>Genre</td>
+           <td>{{movie.genre }}</td>
+       </tr>
+       <tr>
+           <td></td>
+           <td></td>
+       </tr>
+   <tr>
+       <td>Daily Rate</td>
+       <td>{{movie.daily_rate }}</td>
+   </tr>
+   </tbody>
+     {% endfor %}
+ {% endblock %}
+</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Studio</title>
+</head>
+<body>
