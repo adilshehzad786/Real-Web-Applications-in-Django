@@ -1,4 +1,9 @@
 ![](http://i.imgur.com/YiFZyuW.png)
+# Credit & Ownership
+This Website is Copyright ,Ownership of BuckyRobert. I Just Created this Replica Website with some Changes . 
+# Live Version 
+
+<a href="https://viberrbyadil.herokuapp.com"> Website Here</a>
 
 # What is Viberr?
 
