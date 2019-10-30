@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ user.username }}'s cryptofolio {% endblock %}
+
+{% block content %}
+
+{% load nvd3_tags %}
+<head>
+    {% if has_data == True %}
+    {% include_chart_jscss %}
+    {% load_chart fiat_piechart.charttype fiat_piechart.chartdata fiat_piechart.chartcontainer fiat_piechart.extra %}
+    {% load_chart time_series.charttype time_series.chartdata time_series.chartcontainer time_series.extra %}
+    {% endif %}
+</head>
+<body>
+
+    {% if has_data == True %}
+    <div class="row py-2">
+        <div class="col-md-4">
+            <label>
+                <b>Cryptocurrency holdings:</b>
+            </label>
+        </div>
+        <div class="col-md-8">
+            <span>
+                {{ fiat_sum|floatformat:-8 }} {{ fiat }}
+            </span>
+        </div>
+    </div>
+
+    {% if has_investment %}
+    <div class="row py-2">
+        <div class="col-md-4">
+            <label>
+              <b>Total {% if fiat_change >= 0 %}earnings{% else %}loss{% endif %}:
+                </b>
+            </label>
+        </div>
+        <div class="col-md-8">
+          <span>
+            {{ fiat_change|floatformat:-8 }} {{ fiat }}
+          </span>
+          ({% if fiat_change >= 0 %}
+          <span style="color: green">
+          {% else %}
+          <span style="color: red">
+          {% endif %}
+              {{ fiat_change_pct|floatformat:-2 }} %
+          </span>)
+        </div>
+    </div>
+    {% endif %}
+
+    {% if other_balances %}
+    <div class="row">
+        <div class="col-md-4">
+            <label>
+                <b>Other:</b>
+            </label>
+        </div>
+        <div class="col-md-8">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Currency</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for balance in other_balances|dictsortreversed:"amount" %}
+                    <tr>
+                        <td>{{ balance.currency }}</td>
+                        <td>{{ balance.amount|floatformat:-8 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Currency</th>
+                    <th>Amount</th>
+                    <th>Value in {{ fiat }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for balance in balances|dictsortreversed:"amount_fiat" %}
+                <tr>
+                    <td>{{ balance.currency }}</td>
+                    <td>{{ balance.amount|floatformat:-8 }}</td>
+                    <td>
+                        {{ balance.amount_fiat|floatformat:-8 }}
+                        ({{ balance.amount_fiat_pct|floatformat:-2 }}%)
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div>
+        <h3>Balances in {{ fiat }}</h3>
+        {% include_container fiat_piechart.chartcontainer 400 '100%' %}
+    </div>
+    <hr>
+    <div>
+        <h3>Cryptocurrency holdings over time in {{ fiat  }}</h3>
+        {% include_container time_series.chartcontainer 400 '100%' %}
+    </div>
+    {% else %}
+    <p>Nothing to show :(</p>
+    <p>Please add API keys and secrets in <a href="{% url 'settings' %}">settings</a>!</p>
+    {% endif %}
+</body>
+
+{% endblock %}
